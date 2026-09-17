@@ -1,0 +1,194 @@
+{
+  "devops-01": {
+    "docs": 300,
+    "datasets": {
+      "sahil2801/CodeAlpaca-20k": {
+        "status": "ok",
+        "rows": 150,
+        "note": "default/train"
+      },
+      "glaiveai/glaive-code-assistant-v3": {
+        "status": "ok",
+        "rows": 150,
+        "note": "default/train"
+      }
+    }
+  },
+  "devops-16": {
+    "docs": 300,
+    "datasets": {
+      "google-research-datasets/mbpp": {
+        "status": "ok",
+        "rows": 150,
+        "note": "full/train"
+      },
+      "theblackcat102/evol-codealpaca-v1": {
+        "status": "ok",
+        "rows": 150,
+        "note": "default/train"
+      }
+    }
+  },
+  "devops-27": {
+    "docs": 300,
+    "datasets": {
+      "SWE-Gym/SWE-Gym": {
+        "status": "ok",
+        "rows": 150,
+        "note": "default/train"
+      },
+      "m-a-p/CodeFeedback-Filtered-Instruction": {
+        "status": "ok",
+        "rows": 150,
+        "note": "default/train"
+      }
+    }
+  },
+  "design-web": {
+    "docs": 226,
+    "datasets": {
+      "InstateLabs/website-code-dataset": {
+        "status": "ok",
+        "rows": 111,
+        "note": "default/train"
+      },
+      "VortexHunter23/Modern_Website_Code_Generator": {
+        "status": "ok",
+        "rows": 5,
+        "note": "default/train"
+      },
+      "r333ddd/mad-web-design-selected-samples": {
+        "status": "ok",
+        "rows": 10,
+        "note": "default/train"
+      },
+      "finnianx/webdesign": {
+        "status": "ok",
+        "rows": 100,
+        "note": "default/train"
+      },
+      "web-genie-ai/Design2Code-hf": {
+        "status": "skipped",
+        "rows": 0,
+        "note": "not served by datasets-server (/parquet empty)"
+      },
+      "obaydata/design-repo-web-design-benchmark": {
+        "status": "skipped",
+        "rows": 0,
+        "note": "not served by datasets-server (/parquet empty)"
+      },
+      "dhanushkaha/web_designs": {
+        "status": "skipped",
+        "rows": 0,
+        "note": "image-only rows, no textual design knowledge"
+      },
+      "JoshPurtell/web-design-screenshots": {
+        "status": "skipped",
+        "rows": 0,
+        "note": "image-only rows, no textual design knowledge"
+      },
+      "shellcoochi/webDesigner": {
+        "status": "skipped",
+        "rows": 0,
+        "note": "Chinese low-code naiveUI schema; niche, not general web design"
+      },
+      "Kukedlc/web-design-diamond": {
+        "status": "skipped",
+        "rows": 0,
+        "note": "Spanish-dominant; low value for English FTS retrieval"
+      }
+    }
+  },
+  "ml-llm-swarm-mcp": {
+    "docs": {
+      "ml-training": 150,
+      "llm-ops": 650,
+      "swarm-multiagent": 410,
+      "mcp-protocol": 371
+    },
+    "datasets": {
+      "ml-training": {
+        "odyn-network/lora-hyperparameter-benchmark-v1": {
+          "status": "ok",
+          "rows": 50,
+          "note": "default/train"
+        },
+        "pgurazada1/machine-failure-mlops-demo-logs": {
+          "status": "ok",
+          "rows": 100,
+          "note": "default/train"
+        }
+      },
+      "llm-ops": {
+        "NousResearch/hermes-function-calling-v1": {
+          "status": "ok",
+          "rows": 200,
+          "note": "func_calling_singleturn/train"
+        },
+        "glaiveai/glaive-function-calling-v2": {
+          "status": "ok",
+          "rows": 150,
+          "note": "default/train"
+        },
+        "nvidia/Nemotron-RL-Agentic-Function-Calling-Pivot-v1": {
+          "status": "ok",
+          "rows": 150,
+          "note": "default/train"
+        },
+        "stindardlogic/tool-calling-english-100k": {
+          "status": "ok",
+          "rows": 150,
+          "note": "default/train"
+        }
+      },
+      "swarm-multiagent": {
+        "Swarm-AI-Research/fable5-traces-sft": {
+          "status": "ok",
+          "rows": 120,
+          "note": "default/train"
+        },
+        "stindardlogic/agentic-workflows-sft-100k": {
+          "status": "ok",
+          "rows": 150,
+          "note": "default/train"
+        },
+        "LangChainDatasets/multiagent-bidding-dialogue": {
+          "status": "ok",
+          "rows": 40,
+          "note": "default/train"
+        },
+        "DrDrek/crewai_finetuning_dataset": {
+          "status": "ok",
+          "rows": 100,
+          "note": "default/train"
+        }
+      },
+      "mcp-protocol": {
+        "hf-mcp-server/test-mcp-logs": {
+          "status": "ok",
+          "rows": 113,
+          "note": "sessions/sessions"
+        },
+        "kshitijthakkar/mcp-server-bench": {
+          "status": "ok",
+          "rows": 150,
+          "note": "default/train"
+        },
+        "DeepNLP/mcp-servers": {
+          "status": "ok",
+          "rows": 108,
+          "note": "default/train"
+        }
+      }
+    },
+    "skipped": {
+      "dakwi/hyperparameter-optimization-dataset": "text field holds chess move sequences, not ML hyperparameter knowledge",
+      "cShahar/nas-benchmarks": "not served by datasets-server (/parquet empty)",
+      "Salesforce/xlam-function-calling-60k": "gated repo (auto), requires click-through",
+      "Trelis/function_calling_extended": "gated repo (manual), requires click-through",
+      "DeepNLP/Multi-Agents-Parallel-Orchestration-Dataset": "not served by datasets-server (/parquet empty)",
+      "PolicyLayer/mcp-server-catalogue": "not served by datasets-server (/parquet empty)",
+      "automatelab/mcp-servers-tool-catalog": "not served by datasets-server (/parquet empty)"
+    }
+  }
+}
