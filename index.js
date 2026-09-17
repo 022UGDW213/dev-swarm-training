@@ -27,7 +27,7 @@ function toFtsQuery(q) {
   return tokens.map((t) => `"${t}"`).join(' ');
 }
 
-const LANES = ['ml-training', 'llm-ops', 'swarm-multiagent', 'mcp-protocol'];
+const LANES = ['ml-training', 'llm-ops', 'swarm-multiagent', 'mcp-protocol', 'elearning-tutoring'];
 
 /**
  * Full-text search the knowledge index.

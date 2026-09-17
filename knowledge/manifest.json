@@ -190,5 +190,35 @@
       "PolicyLayer/mcp-server-catalogue": "not served by datasets-server (/parquet empty)",
       "automatelab/mcp-servers-tool-catalog": "not served by datasets-server (/parquet empty)"
     }
+  },
+  "tutoring": {
+    "docs": {
+      "elearning-tutoring": 588
+    },
+    "datasets": {
+      "elearning-tutoring": {
+        "princeton-nlp/TutorChat": {
+          "status": "ok",
+          "rows": 150,
+          "note": "default/train"
+        },
+        "knght0wl21/socratic-tutoring-dataset": {
+          "status": "ok",
+          "rows": 150,
+          "note": "default/train"
+        },
+        "derek-thomas/squad-v1.1-t5-question-generation": {
+          "status": "ok",
+          "rows": 150,
+          "note": "default/train"
+        },
+        "Eedi/Question-Anchored-Tutoring-Dialogues-2k": {
+          "status": "ok",
+          "rows": 138,
+          "note": "anchored-dialogues/train (grouped by InterventionId)"
+        }
+      }
+    },
+    "skipped": {}
   }
 }
