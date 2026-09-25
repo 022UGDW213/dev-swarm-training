@@ -13,30 +13,36 @@ TutorChat all converge on it:
 1. **Anchor** — one question or topic per session. Load the anchor into
    context first (Eedi dialogues never drift off their `QuestionId_DQ`).
 2. **Diagnose** — before responding, name the student's misconception to
-   yourself (the `teacher_described_confusion` field in the socratic corpus
-   exists for exactly this).
+   yourself. The ingest (`train/ingest_tutoring.py`) reads the socratic
+   corpus's `teacher_described_confusion` column into each digest as the
+   `TEACHER READ OF CONFUSION` line — that line is the diagnosis.
 3. **Probe, don't tell** — ask the question that exposes the misconception.
    The socratic rule is absolute: the tutor never hands over the answer.
-4. **Press for accuracy** — the #1 labeled tutor move (624/1,224 Eedi tutor
-   turns): "what exactly do you mean by…", "can you say that more precisely".
-   Precision-first beats explanation-first.
-5. **Revoice** — restate their idea back, slightly cleaned up (189 turns):
+4. **Press for accuracy** — the #1 labeled tutor move (603 of the 1,190
+   labeled turns across the 138 indexed Eedi dialogues): "what exactly do you
+   mean by…", "can you say that more precisely". Precision-first beats
+   explanation-first.
+5. **Revoice** — restate their idea back, slightly cleaned up (186 turns):
    "so you're saying…". It validates and sharpens in one move.
-6. **Check alignment** — `<Keep Together>` (376 turns): confirm you're on the
+6. **Check alignment** — `<Keep Together>` (368 turns): confirm you're on the
    same page before advancing. In 1:1, that's "does that make sense so far?".
 
 ## Talk-move cheat sheet
 
-| Move | When to use | Corpus weight |
+Weights are the labeled turns in the 138 Eedi dialogues actually ingested into
+this index (counted against `data/index.db` on 2026-09-26):
+
+| Move | When to use | Indexed weight |
 |---|---|---|
-| Press for Accuracy | student is vague or hand-wavy | 624 — default |
-| Keep Together | transitioning topics, checking alignment | 376 |
-| Revoicing | student has the right idea, poorly stated | 189 |
-| Press for Reasoning | student is right — ask *why* | 16 — depth push |
-| Getting Student to Relate | connect to prior knowledge | 17 |
+| Press for Accuracy | student is vague or hand-wavy | 603 — default |
+| Keep Together | transitioning topics, checking alignment | 368 |
+| Revoicing | student has the right idea, poorly stated | 186 |
+| Getting Student to Relate | connect to prior knowledge | 16 |
+| Press for Reasoning | student is right — ask *why* | 15 — depth push |
 | Restating | echo for emphasis | 2 — rare |
 
-Most turns need no labeled move — scaffolding, encouragement, logistics.
+Most turns need no labeled move — 1,708 of the indexed Eedi tutor turns carry
+no move label at all (scaffolding, encouragement, logistics).
 Moves are deliberate interventions, not filler.
 
 ## Socratic case format (for training/eval data)
@@ -56,8 +62,9 @@ Self-correction is the success metric, not answer delivery.
 ## TutorChat dialogue shape (openbook mode)
 
 - Tutor opens with the topic + skills to develop (one short block).
-- Then the student drives: short clarifying questions, tutor answers with
-  real explanations (400–2,000 chars). Don't lecture in a fixed order —
+- Then the student drives: short clarifying questions, tutor turns are
+  explanations (the indexed digests clip each tutor turn at 600 chars, so
+  length beyond that is not recorded here). Don't lecture in a fixed order —
   follow the student's curiosity.
 - Student enthusiasm ("I'm really intrigued by…") is the signal to go
   deeper, not to move on.

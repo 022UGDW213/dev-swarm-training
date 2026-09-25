@@ -18,18 +18,19 @@ tool-calling-english-100k (150).
   force-fits tools onto chit-chat.
 - Forbid assumed argument values in the system prompt (Hermes pattern).
 - Multi-turn = loop model → tool → model; budget context for it.
-- Parallel calls (14% of the 100k corpus) halve fan-out latency — enable when
-  tools are independent.
+- Parallel calls (21/150 = 14% of the ingested tool-calling sample) halve
+  fan-out latency — enable when tools are independent.
 - Cap tool rounds (~5); confused models loop forever.
 
 ## Agent honesty (Nemotron)
 
 - The correct action when no tool covers the request is an explicit limitation
   statement naming the closest available tool — never a hallucinated result.
-- Refusals ("I don't have that capability") are features, proven in glaive.
+- Refusals ("I don't have that capability") are features — 12 glaive digests
+  carry that exact refusal line.
 - After each tool result, re-read the user request before the final answer.
 
 ## Portability
 
-- Keep schemas OpenAI-compatible (function.name/arguments) — works across
-  Kimi K3 CLI, local Qwen, and hosted models alike.
+- Keep schemas OpenAI-compatible (`function.name`/`arguments`) — local
+  (Ollama/Qwen) and hosted models both accept that shape.

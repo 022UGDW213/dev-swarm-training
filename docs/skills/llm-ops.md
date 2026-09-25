@@ -80,5 +80,6 @@ here, there are hundreds of proven examples to mirror.
   request before composing the final answer — models drift.
 - **Unbounded loops:** cap tool-call rounds (e.g. 5); a confused model will
   call tools forever without a budget.
-- **Juan's stack:** his Kimi K3 CLI and local Qwen work uses tool calling —
-  keep schemas OpenAI-compatible (function.name/arguments) for max portability.
+- **Portability:** keep schemas OpenAI-compatible (`function.name` /
+  `arguments`) — that is the shape local (Ollama/Qwen) and hosted models both
+  accept, so the same tool definition travels.

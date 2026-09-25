@@ -8,8 +8,9 @@ Runbook for multi-agent work. Grounded in 410 HF docs:
 
 ## What real agent traces look like
 
-From 120 fable5 traces (claude_code_session origin): **avg 26 messages, 9 tool
-calls per task**. The role flow is always the same shape:
+From the 120 indexed fable5 traces (claude_code_session origin), measured
+2026-09-26: **avg 25.9 messages and 8.6 tool calls per trace**. The role flow
+is always the same shape:
 
 ```
 user → assistant → assistant → tool → assistant → tool → assistant …
@@ -32,9 +33,10 @@ Give each worker a **role card**: goal + backstory + expertise. Example shape:
 > actionable insights.
 
 Role cards beat generic "you are a helpful assistant" because they anchor the
-agent's tool choices and output style. This maps 1:1 onto the dev-swarm's
-30 profiles (devops-01..30) — each profile should read like a role card, not
-a capability list.
+agent's tool choices and output style. Map them 1:1 onto the dev-swarm lanes
+this index already carries (`devops-01`, `devops-16`, `devops-27` — 300 docs
+each per `knowledge/manifest.json`) — each profile should read like a role
+card, not a capability list.
 
 ## Workflow patterns (agentic-workflows-sft-100k)
 
@@ -59,8 +61,8 @@ positions, let them argue, then have a judge agent summarize.
 
 - **Task queue over direct calls:** sqlite queue with `kind` (shell/fetch/
   python) — agents pull, never get pushed to. Survives worker death.
-- **Heartbeats:** workers die quietly (observed: 30/30 dead with no error).
-  Check heartbeats before trusting "alive", restart dead ones.
+- **Heartbeats:** workers die quietly — a dead worker often leaves no error
+  behind. Check heartbeats before trusting "alive", restart dead ones.
 - **skill_context per task:** attach top-3 FTS hits to each task payload so
   every worker acts with retrieved knowledge, not just its prompt.
 - **Idempotent tasks:** a worker may die mid-task; another picks it up. Tasks
@@ -76,6 +78,6 @@ positions, let them argue, then have a judge agent summarize.
   skill_context carry. Put state in the queue/DB, not in a worker's head.
 - **Role drift:** without role cards, agents converge to generic assistant
   behavior within a few turns. Re-inject the role on long traces.
-- **Tool-result flooding:** 9 tool calls × verbose output = context death.
+- **Tool-result flooding:** ~9 tool calls × verbose output = context death.
   Truncate tool output to what the next decision needs.
 - **Silent death:** the #1 dev-swarm failure mode. Monitor, don't assume.

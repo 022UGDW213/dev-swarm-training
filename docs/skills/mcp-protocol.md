@@ -36,12 +36,12 @@ The logs carry an `authorized` boolean per session — 58/113 test sessions were
 ## What's in the ecosystem (catalog, 108 servers)
 
 MCP servers span: dev tools, data sources, AI model gateways, automation.
-When evaluating a server for Juan's "juan-vm" MCP server or n8n wiring:
+When evaluating a server for a local stdio harness or an n8n wiring:
 
 1. Check its declared tools and required capabilities.
 2. Check its transport: the bench corpus covers `http_api` (90 scenarios) and
-   `mcp_streamable` (60) — stdio suits local (like juan-vm), streamable HTTP
-   suits remote.
+   `mcp_streamable` (60) — stdio suits local servers, streamable HTTP suits
+   remote ones.
 3. Load-test before trusting: the bench runs virtual users against tools
    (echo, etc.) on `gradio` and `fastmcp` servers and records success rate,
    req/s, avg/p95/p99 latency.
@@ -59,18 +59,21 @@ Per scenario record: `scenario_id`, server, protocol, tool, `virtual_users`,
 - **Concurrency limits:** some servers set `concurrency_limit`; respect it or
   you'll benchmark the queue, not the server.
 
-## juan-vm mapping (Juan's local MCP server)
+## Local stdio MCP server (host-side mapping)
 
-His server (`~/workspace/mcp-server/server.py`, stdio) exposes:
-`open_chrome`, `apt_install`, `bash` (root), `vm_status`. When adding tools:
+This section was written against a local stdio MCP server (recorded
+2026-09-17) that exposed `open_chrome`, `apt_install`, a root `bash`, and
+`vm_status`. That server is **not present on the current workstation**
+(`~/workspace/mcp-server/server.py` does not exist here — checked 2026-09-26),
+so treat its tool list as the worked example rather than as a live inventory.
+The lessons apply to any local stdio server:
 
 - One tool = one verb, JSON-schema params with `required` — same discipline
   as the LLM tool-calling skill.
-- `bash` with root is the dangerous one: scope commands, log invocations,
+- A root `bash` tool is the dangerous one: scope commands, log invocations,
   never expose it over the network without the auth lesson above.
-- Keep the skill doc (`~/workspace/skills/mcp-server/SKILL.md`) in sync with
-  the tool list — drift between docs and tools is how agents call tools that
-  don't exist.
+- Keep the skill doc in sync with the tool list — drift between docs and tools
+  is how agents call tools that don't exist.
 
 ## Pitfalls
 
@@ -80,6 +83,7 @@ His server (`~/workspace/mcp-server/server.py`, stdio) exposes:
   have a human in the loop — headless clients hang.
 - **Sampling loops:** server asks client LLM → client calls server tool →
   server asks again. Cap recursion depth.
-- **Test logs are synthetic:** 113 sessions from one test harness — great for
-  protocol shape, not for real-world traffic patterns. Validate against your
-  own logs before tuning timeouts.
+- **Test logs are not production traffic:** the 113 sessions come from one
+  test server and 10 client versions (fast-agent-mcp, claude-code,
+  inspector-client) — great for protocol shape, not for real-world traffic
+  patterns. Validate against your own logs before tuning timeouts.

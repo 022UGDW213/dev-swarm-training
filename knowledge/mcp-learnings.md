@@ -17,7 +17,7 @@ Distilled 2026-09-17 from hf-mcp-server/test-mcp-logs (113), mcp-server-bench
 
 - 58/113 test sessions were unauthorized: gate *execution* on auth, not
   session creation. Log client name + IP on failures.
-- Never expose privileged tools (e.g. juan-vm's root `bash`) over the network
+- Never expose privileged tools (e.g. a root `bash` tool) over the network
   without auth.
 
 ## Evaluation
@@ -25,8 +25,8 @@ Distilled 2026-09-17 from hf-mcp-server/test-mcp-logs (113), mcp-server-bench
 - Load-test before trusting a server: virtual users, req/s, success rate,
   avg/p95/p99 latency. Size timeouts off p99 (long-tail on LLM-backed tools).
 - Failed requests at 1 virtual user = broken server, not load.
-- Transports: stdio for local (juan-vm), `http_api` / `mcp_streamable` for
-  remote — the bench covers both.
+- Transports: stdio for local servers, `http_api` / `mcp_streamable` for
+  remote — the bench covers both (90 + 60 scenarios).
 
 ## Docs discipline
 

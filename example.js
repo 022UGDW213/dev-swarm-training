@@ -13,8 +13,10 @@ for (const r of searchKnowledge('LoRA rank alpha', { lane: 'ml-training', limit:
   console.log(`  ${r.text.slice(0, 180).replace(/\n/g, ' ')}...`);
 }
 
-console.log('\n=== searchKnowledge("MCP handshake initialize") ===');
-for (const r of searchKnowledge('MCP handshake initialize', { limit: 2 })) {
+console.log('\n=== searchKnowledge("MCP initialize") ===');
+const mcpHits = searchKnowledge('MCP initialize', { limit: 2 });
+console.log(`${mcpHits.length} hit(s) shown (query terms are ANDed as quoted tokens)`);
+for (const r of mcpHits) {
   console.log(`- [${r.lane}] ${r.dataset}`);
   console.log(`  ${r.text.slice(0, 180).replace(/\n/g, ' ')}...`);
 }

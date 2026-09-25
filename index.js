@@ -1,6 +1,7 @@
 // dev-swarm-training — zero-dependency Node.js API over the bundled FTS5
 // knowledge index (data/index.db) and the skill runbooks (docs/skills/).
-// Uses Node's built-in node:sqlite (stable since Node 23.4); no npm deps.
+// Uses Node's built-in node:sqlite — available without a flag since Node
+// v22.13.0 / v23.4.0 (still experimental in the v22/v23 lines). No npm deps.
 
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -33,7 +34,7 @@ const LANES = ['ml-training', 'llm-ops', 'swarm-multiagent', 'mcp-protocol', 'el
  * Full-text search the knowledge index.
  * @param {string} query  keywords, e.g. "LoRA rank alpha"
  * @param {{lane?: string, limit?: number}} [opts]  lane filters to one of the
- *   four training lanes; limit defaults to 5.
+ *   five training lanes; limit defaults to 5.
  * @returns {Array<{lane, dataset, text, rank}>} best matches first.
  */
 export function searchKnowledge(query, { lane = null, limit = 5 } = {}) {

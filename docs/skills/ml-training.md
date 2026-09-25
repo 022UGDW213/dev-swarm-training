@@ -10,11 +10,11 @@ Distributions from 50 verified configs — use these as your defaults:
 
 | Hyperparam | Common values | Default pick |
 |---|---|---|
-| `lora_rank` | 8–32 (32 most common; 64–256 rare) | **16 or 32** |
-| `lora_alpha` | 16 or 32 (≈ alpha = rank or 2×rank) | **32 with rank 16** |
-| `lora_dropout` | 0.05 (majority), 0.0 also common | **0.05** |
+| `lora_rank` | 8–32 (32 in 20/50; 8 in 10/50; 16 in 6/50) | **16 or 32** |
+| `lora_alpha` | 16 (27/50), 32 (8/50); 64–512 in the rest | **16, or 32 with rank 32** |
+| `lora_dropout` | 0.05 (27/50), 0.0 (10/50) | **0.05** |
 | `learning_rate` | 2e-4 (34/50), 1e-4 (9/50) | **2e-4** |
-| `num_epochs` | 1–4 | **3** |
+| `num_epochs` | 1–4 common (1 in 18/50, 2 in 11/50, 4 in 10/50, 3 in 7/50) | **1–3** |
 | `seq_len` | 2048 (18), 4096 (12) | **4096** if VRAM allows |
 | `gradient_checkpointing` | on in 31/34 reporting configs | **on** |
 | `base_precision` | full bf16 (22), 4-bit (20) | **4-bit QLoRA** on consumer GPUs |
@@ -38,15 +38,15 @@ load_in_4bit = True          # QLoRA on limited VRAM
 
 - **Alpha/rank mismatch:** alpha ≪ rank starves the adapter; alpha ≫ 4×rank
   destabilizes. Corpus sweet spot: alpha ∈ {rank, 2×rank}.
-- **lr too low on short runs:** 5e-6–1e-5 only appeared with long schedules;
+- **lr too low on short runs:** 5e-6–1e-5 appears in only 4/50 configs;
   for 1–3 epoch SFT runs, 2e-4 is the proven default.
 - **No dropout on tiny data:** with <1k samples some configs use dropout 0.0 —
   with ≥10k samples, 0.05 is safer.
 - **Forgetting checkpointing:** without it, seq_len 4096 on 8–24GB VRAM OOMs.
   The corpus has it on in nearly every reporting config.
-- **Juan's Kaggle context:** TRL has crashed his runs before — pin the TRL
-  version, save adapter checkpoints every 500 steps, never rely on a full
-  2000-step run completing.
+- **Library version drift:** a TRL bump can change trainer defaults mid-run —
+  pin the TRL version, save adapter checkpoints every 500 steps, and don't
+  rely on a long run completing untouched.
 
 ## MLOps monitoring (from the failure-prediction demo logs)
 
