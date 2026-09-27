@@ -22,7 +22,19 @@ Distributions from 50 verified configs — use these as your defaults:
 Effective batch = `batch_size × grad_accum` — corpus runs tiny per-device
 batches (1–8) with grad accumulation; don't mistake per-device batch for the
 real one. ~50k samples with rank 16 / alpha 32 / lr 2e-4 / 1 epoch is a proven
-working point (ax-llama3.2-1b-lora).
+working point (ax-llama3.2-1b-lora, `dataset_samples=54568`).
+
+Every count in the table is one `grep -c` away from the shipped index, e.g.
+
+```bash
+D="select text from docs where dataset='odyn-network/lora-hyperparameter-benchmark-v1'"
+sqlite3 data/index.db "$D" | grep -c 'lora_rank=32,'            # 20
+sqlite3 data/index.db "$D" | grep -c 'lora_alpha_effective=16,' # 27
+sqlite3 data/index.db "$D" | grep -c 'learning_rate=0.0002'     # 34
+sqlite3 data/index.db "$D" | grep -c 'num_epochs=1.0,'          # 18
+sqlite3 data/index.db "$D" | grep -c 'seq_len=2048,'            # 18
+sqlite3 data/index.db "$D" | grep -c 'base_precision=full,'     # 22
+```
 
 ## Quick config template (Unsloth/TRL style)
 

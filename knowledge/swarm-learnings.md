@@ -5,10 +5,13 @@ Distilled 2026-09-17 from fable5-traces-sft (120), agentic-workflows-sft-100k
 
 ## Trace shape
 
-- Real coding-agent traces, measured over the 120 indexed fable5 traces: avg
-  25.9 messages and 8.6 tool calls per trace; the loop is
-  assistant-acts → tool-responds → assistant-continues. Hard tasks hit 100+
-  messages — budget context, summarize tool output.
+- Real coding-agent traces exist in the corpus but are the minority: of the 120
+  indexed fable5 traces only **16 carry any tool call** — the other 104 are a
+  single user→assistant exchange (2 messages, 0 tool calls). Over the whole 120
+  the average is 25.9 messages and 8.6 tool calls per trace (median 2, max 813),
+  so those averages are carried entirely by the 16. The loop they show is
+  assistant-acts → tool-responds → assistant-continues. On those long traces,
+  budget context and summarize tool output.
 - Tool results are terse status lines; parse as structured outcomes.
 
 ## Roles

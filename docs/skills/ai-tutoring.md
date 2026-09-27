@@ -7,17 +7,22 @@ Runbook for building AI tutors and study assistants. Grounded in 588 HF docs:
 
 ## The tutor loop (from the corpora)
 
-Every working tutoring session follows this loop — Eedi, Socratic, and
-TutorChat all converge on it:
+The three dialogue corpora (Eedi, Socratic, TutorChat) share this shape; it is
+the loop worth building to:
 
 1. **Anchor** — one question or topic per session. Load the anchor into
-   context first (Eedi dialogues never drift off their `QuestionId_DQ`).
+   context first (each Eedi digest names exactly one `QuestionId_DQ`; the
+   anchor's question text itself is present in 59 of the 138 indexed digests —
+   `grep -c '^ANCHOR QUESTION:'` → `59` — because the ingest's metadata lookup
+   only fetched the first 400 `dq-question-metadata` rows).
 2. **Diagnose** — before responding, name the student's misconception to
    yourself. The ingest (`train/ingest_tutoring.py`) reads the socratic
    corpus's `teacher_described_confusion` column into each digest as the
    `TEACHER READ OF CONFUSION` line — that line is the diagnosis.
 3. **Probe, don't tell** — ask the question that exposes the misconception.
-   The socratic rule is absolute: the tutor never hands over the answer.
+   In the socratic lane the teacher turn asks the next question rather than
+   stating the result: 0 of the 150 indexed dialogues contain a phrase like
+   "the answer is" / "correct answer".
 4. **Press for accuracy** — the #1 labeled tutor move (603 of the 1,190
    labeled turns across the 138 indexed Eedi dialogues): "what exactly do you
    mean by…", "can you say that more precisely". Precision-first beats
@@ -30,7 +35,8 @@ TutorChat all converge on it:
 ## Talk-move cheat sheet
 
 Weights are the labeled turns in the 138 Eedi dialogues actually ingested into
-this index (counted against `data/index.db` on 2026-09-26):
+this index (recounted against `data/index.db` on 2026-09-27 with
+`sqlite3 data/index.db "select text from docs where dataset='Eedi/Question-Anchored-Tutoring-Dialogues-2k'" | grep -c '^TUTOR\[<Keep Together>\]'` — 368 — and the same for each other move):
 
 | Move | When to use | Indexed weight |
 |---|---|---|
@@ -41,8 +47,8 @@ this index (counted against `data/index.db` on 2026-09-26):
 | Press for Reasoning | student is right — ask *why* | 15 — depth push |
 | Restating | echo for emphasis | 2 — rare |
 
-Most turns need no labeled move — 1,708 of the indexed Eedi tutor turns carry
-no move label at all (scaffolding, encouragement, logistics).
+Most turns need no labeled move — 1,708 of the 2,900 indexed Eedi `TUTOR`
+turns carry no move label at all (scaffolding, encouragement, logistics).
 Moves are deliberate interventions, not filler.
 
 ## Socratic case format (for training/eval data)
@@ -63,9 +69,11 @@ Self-correction is the success metric, not answer delivery.
 
 - Tutor opens with the topic + skills to develop (one short block).
 - Then the student drives: short clarifying questions, tutor turns are
-  explanations (the indexed digests clip each tutor turn at 600 chars, so
-  length beyond that is not recorded here). Don't lecture in a fixed order —
-  follow the student's curiosity.
+  explanations. `doc_tutorchat` in `train/ingest_tutoring.py` clips each turn to
+  600 chars, and the longest tutor turn in the bundled index measures exactly
+  600 — so length beyond that is not recorded here. Verify:
+  `sqlite3 data/index.db "select text from docs where dataset='princeton-nlp/TutorChat'" | grep '^TUTOR: ' | cut -c8- | wc -L` → `600`.
+  Don't lecture in a fixed order — follow the student's curiosity.
 - Student enthusiasm ("I'm really intrigued by…") is the signal to go
   deeper, not to move on.
 

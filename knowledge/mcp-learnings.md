@@ -24,6 +24,9 @@ Distilled 2026-09-17 from hf-mcp-server/test-mcp-logs (113), mcp-server-bench
 
 - Load-test before trusting a server: virtual users, req/s, success rate,
   avg/p95/p99 latency. Size timeouts off p99 (long-tail on LLM-backed tools).
+  The bench corpus here carries request totals and success/failure counts but
+  **no latency field at all** (0/150 records), so the percentile has to come
+  from your own run, not from this index.
 - Failed requests at 1 virtual user = broken server, not load.
 - Transports: stdio for local servers, `http_api` / `mcp_streamable` for
   remote — the bench covers both (90 + 60 scenarios).

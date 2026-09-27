@@ -1,6 +1,8 @@
 # dev-swarm-training
 
-Training knowledge for the [dev-swarm](https://github.com/022UGDW213) agent fleet:
+Training knowledge for the
+[dev-swarm](https://github.com/022UGDW213/ibot-Mythos-VPC-Devswarm) agent fleet
+(public repo, verified in `_facts/github-repos.json`):
 **3,295 full-text-indexed documents** across ML, LLM, multi-agent swarm, MCP,
 and AI-tutoring lanes, plus the skill runbooks distilled from them — and a
 **zero-dependency Node.js module** (`index.js`) to query it all.
@@ -34,8 +36,8 @@ not a raw data blob.
 |---|---|---|
 | `ml-training` | 150 | `odyn-network/lora-hyperparameter-benchmark-v1` (50) — verified LoRA configs: rank/alpha/dropout/lr/epochs/seq_len · `pgurazada1/machine-failure-mlops-demo-logs` (100) — MLOps telemetry + failure predictions |
 | `llm-ops` | 650 | `NousResearch/hermes-function-calling-v1` (200) — tool schemas + dialogues · `glaiveai/glaive-function-calling-v2` (150) · `nvidia/Nemotron-RL-Agentic-Function-Calling-Pivot-v1` (150) — agentic trajectories · `stindardlogic/tool-calling-english-100k` (150) — parallel/multiturn tool calls (21/150 parallel, 16/150 multiturn) |
-| `swarm-multiagent` | 410 | `Swarm-AI-Research/fable5-traces-sft` (120) — multi-turn agent traces (over the 120 indexed traces: avg 25.9 messages, 8.6 tool calls) · `stindardlogic/agentic-workflows-sft-100k` (150) · `LangChainDatasets/multiagent-bidding-dialogue` (40) · `DrDrek/crewai_finetuning_dataset` (100) — agent role profiles |
-| `mcp-protocol` | 371 | `hf-mcp-server/test-mcp-logs` (113) — real MCP handshakes (`initialize`, protocolVersion `2025-06-18`, sampling/elicitation; 58/113 sessions unauthorized) · `kshitijthakkar/mcp-server-bench` (150) — load tests (90 `http_api` + 60 `mcp_streamable` scenarios), p95/p99 · `DeepNLP/mcp-servers` (108) — server catalog |
+| `swarm-multiagent` | 410 | `Swarm-AI-Research/fable5-traces-sft` (120) — agent traces, of which only 16 carry a tool call (over the 120: avg 25.9 messages, 8.6 tool calls, median 2) · `stindardlogic/agentic-workflows-sft-100k` (150) · `LangChainDatasets/multiagent-bidding-dialogue` (40) · `DrDrek/crewai_finetuning_dataset` (100) — agent role profiles |
+| `mcp-protocol` | 371 | `hf-mcp-server/test-mcp-logs` (113) — real MCP handshakes (`initialize`, protocolVersion `2025-06-18`, sampling/elicitation; 58/113 sessions unauthorized, 36/113 carry a `session_delete`) · `kshitijthakkar/mcp-server-bench` (150) — load tests (90 `http_api` + 60 `mcp_streamable` scenarios, 1/10/25/50 virtual users; per-record latency fields are **absent** — see below) · `DeepNLP/mcp-servers` (108) — server catalog |
 | `elearning-tutoring` | 588 | `princeton-nlp/TutorChat` (150) — tutor-student dialogues · `Eedi/Question-Anchored-Tutoring-Dialogues-2k` (138) — question-anchored dialogues; tutor talk moves counted in the 138 indexed dialogues: Press for Accuracy 603, Keep Together 368, Revoicing 186, Getting Student to Relate 16, Press for Reasoning 15, Restating 2 (1,190 labeled turns) · `knght0wl21/socratic-tutoring-dataset` (150) — socratic cases: question → incorrect solution → misconception probe · `derek-thomas/squad-v1.1-t5-question-generation` (150) — passage → quiz-question pairs |
 
 The lanes that predate the ML/LLM/swarm/MCP pass (driven by an earlier ingest
@@ -45,16 +47,39 @@ Datasets skipped (gated, image-only, or not served by datasets-server) are
 recorded in `knowledge/manifest.json` — 13 skipped dataset references on top of
 the 27 that produced docs.
 
-### Verified 2026-09-26 on this workstation
+Two limits of this snapshot are worth stating up front, because the docs below
+lean on them:
+
+- **No latency data.** `train/ingest_ml_agents.py` asks each
+  `kshitijthakkar/mcp-server-bench` row for `requests_per_second`,
+  `avg_latency_ms`, `p95_latency_ms` and `p99_latency_ms`, but the rows served
+  by datasets-server carry none of them, so **no latency percentile exists
+  anywhere in this index** (0 of 150 bench records). The fields actually
+  present are `scenario_id`, `server`, `protocol`, `tool`, `virtual_users`,
+  `duration_s`, `total_requests`, `successful_requests`, `failed_requests`, plus
+  `concurrency_limit` on 110 of the 150.
+  Verify: `sqlite3 data/index.db "select count(*) from docs where dataset='kshitijthakkar/mcp-server-bench' and text like '%p95%'"` → `0`.
+- **Verbatim third-party strings inside the index.** The digests quote their
+  source datasets row-for-row, so upstream placeholder identifiers survive —
+  e.g. `stindardlogic/tool-calling-english-100k` rows contain
+  `alice@company.com` / `calendar.example.com`. Those are the upstream
+  dataset's own fixtures, stored under the `dataset` column that names them;
+  they are not this repo's data.
+
+### Verified 2026-09-27 on this workstation
 
 | Claim | Measured value | Command |
 |---|---|---|
 | bundle size | 8,749,056 bytes (8.7 MB decimal / 8.3 MiB) | `stat -c %s data/index.db` |
 | document count | 3,295 | `python3 -c "import sqlite3;print(sqlite3.connect('file:data/index.db?mode=ro',uri=True).execute('select count(*) from docs').fetchone()[0])"` |
-| FTS5 tables | `docs`, `docs_config`, `docs_content`, `docs_data`, `docs_docsize`, `docs_idx` | `sqlite_master` query |
-| datasets ingested | 27 | `select count(distinct dataset) from docs` |
-| lanes | 9 | `select agent_id, count(*) from docs group by agent_id` |
+| FTS5 tables | `docs`, `docs_config`, `docs_content`, `docs_data`, `docs_docsize`, `docs_idx` | `sqlite3 data/index.db "select name from sqlite_master where type='table'"` |
+| datasets ingested | 27 | `sqlite3 data/index.db "select count(distinct dataset) from docs"` |
+| lanes | 9 | `sqlite3 data/index.db "select agent_id, count(*) from docs group by agent_id"` |
 | manifest rows sum | 3,295 (equals the index count) | `python3 -c "import json;print(sum((v['docs'] if not isinstance(v['docs'],dict) else sum(v['docs'].values())) for v in json.load(open('knowledge/manifest.json')).values()))"` |
+| Eedi labeled tutor turns | 1,190 complete labels; 2 more had their label cut by the 3,000-char per-doc cap; 1,708 unlabeled, out of 2,900 `TUTOR` turns in the 138 indexed dialogues | `sqlite3 data/index.db "select text from docs where dataset='Eedi/Question-Anchored-Tutoring-Dialogues-2k'" \| grep -cE '^TUTOR\[<[^>]+>\]'` (also `grep -c '^TUTOR'`, `grep -c '^TUTOR:'`) |
+| fable5 tool-using traces | 16 of 120 (the other 104 are 2-message user→assistant rows with 0 tool calls) | `sqlite3 data/index.db "select text from docs where dataset='Swarm-AI-Research/fable5-traces-sft'" \| grep -oE 'TOOL CALLS: [0-9]+' \| grep -c 'TOOL CALLS: 0'` → `104` |
+| bench latency percentiles | 0 of 150 records (field absent upstream) | `sqlite3 data/index.db "select count(*) from docs where dataset='kshitijthakkar/mcp-server-bench' and text like '%p95%'"` |
+| Node runtime | v22.23.2, `node:sqlite` importable without a flag | `node --version`, `node -e "require('node:sqlite')"` |
 | smoke test | exit code 0, real hits | `node example.js` |
 
 ## How the ingest works
@@ -103,7 +128,8 @@ Zero runtime dependencies — it uses Node's built-in `node:sqlite`. That module
 is available without a flag from Node **v22.13.0 / v23.4.0** and is still
 marked experimental on the v22/v23 lines, so the smoke test prints a
 `ExperimentalWarning: SQLite is an experimental feature` line on stderr. The
-run below was verified on **Node v22.23.2** (2026-09-26).
+run below was re-verified on **Node v22.23.2** (2026-09-27,
+`node --version && node -e "require('node:sqlite')"`).
 
 ```js
 import { searchKnowledge, listSkills, getSkill, stats } from 'dev-swarm-training';
@@ -123,8 +149,10 @@ getSkill('mcp-protocol'); // full Markdown runbook
 ```
 
 Query terms are ANDed as quoted FTS5 tokens — `searchKnowledge('MCP initialize')`
-matches (112 docs); `searchKnowledge('MCP handshake initialize')` matches nothing,
-because no indexed document contains the literal word `handshake`.
+matches 77 docs (verify: `sqlite3 data/index.db "select count(*) from docs where docs match '\"MCP\" \"initialize\"'"`);
+`searchKnowledge('MCP handshake initialize')` matches nothing,
+because no indexed document contains the literal word `handshake`
+(`select count(*) from docs where text like '%handshake%'` → `0`).
 
 Run the smoke test (there are no dependencies, so no `npm install` is needed —
 npm creates no `node_modules/` here):

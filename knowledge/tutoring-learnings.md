@@ -8,8 +8,10 @@ socratic-tutoring-dataset (150), derek-thomas/squad-v1.1-t5-question-generation
 ## Tutor talk moves (Eedi, 1,190 labeled turns in the 138 indexed dialogues)
 
 The ingest kept 138 of the Eedi dialogues, so these are the label counts that
-actually live in `data/index.db` (counted 2026-09-26) — not the source
-dataset's full-2k totals:
+actually live in `data/index.db` (counted 2026-09-27) — not the source
+dataset's full-2k totals. Each count is reproducible with
+`sqlite3 data/index.db "select text from docs where dataset='Eedi/Question-Anchored-Tutoring-Dialogues-2k'" | grep -c '^TUTOR\[<Press for Accuracy>\]'`
+(swap the label for the other moves; `grep -c '^TUTOR'` → `2900`).
 
 - `<Press for Accuracy>` (603) — the dominant move: ask the student to be
   precise ("what exactly do you mean by…", "can you say that more precisely").
@@ -21,10 +23,15 @@ dataset's full-2k totals:
   cleaned up ("so you're saying…"). Validates and sharpens their thinking.
 - `<Getting Student to Relate>` (16), `<Press for Reasoning>` (15),
   `<Restating>` (2) — rarer, used for deeper conceptual pushes.
-- Most turns carry NO labeled move — 1,708 of the 2,898 indexed Eedi tutor
+- Most turns carry NO labeled move — 1,708 of the 2,900 indexed Eedi `TUTOR`
   turns have no label at all (ordinary scaffolding, encouragement, and
-  logistics dominate raw turn count). Moves are the deliberate interventions,
-  not the filler.
+  logistics dominate raw turn count). The other 1,192 turn lines do start a
+  label, but 2 of those were cut mid-label because the digest hit the ingest's
+  3,000-char per-doc cap (`TUTOR[<Press for Accu…`, `TUTOR[<Pres…`; 8 of the
+  138 Eedi digests are truncated this way — verify with
+  `sqlite3 data/index.db "select text from docs where dataset='Eedi/Question-Anchored-Tutoring-Dialogues-2k'" | grep -c '…$'`),
+  which is why the six label counts above total 1,190. Moves are the deliberate
+  interventions, not the filler.
 
 ## Socratic discipline
 
@@ -49,9 +56,13 @@ dataset's full-2k totals:
 
 ## Anchoring (Eedi)
 
-- One question per session. Every dialogue is anchored to a single
-  `QuestionId_DQ` with its full text available — the tutor never drifts to
-  adjacent topics.
+- One question per session. Every indexed dialogue names a single
+  `QuestionId_DQ` in its header line (`… (intervention N, question M)` — 138/138
+  docs); the anchor question's **text** was resolved into the digest for 59 of
+  the 138, because the join against `dq-question-metadata` only saw the first
+  400 metadata rows. Verify:
+  `sqlite3 data/index.db "select text from docs where dataset='Eedi/Question-Anchored-Tutoring-Dialogues-2k'" | grep -c '^ANCHOR QUESTION:'` → `59`.
+  The tutor never drifts to adjacent topics either way.
 - For an AI study assistant: load the anchor question into context first,
   then tutor only within its scope.
 
