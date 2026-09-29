@@ -1,0 +1,190 @@
+{
+ "tech-analytics": {
+  "acol": "answer",
+  "dataset": "b-mc2/sql-create-context",
+  "license": "cc-by-4.0",
+  "qcol": "question",
+  "sample": 40,
+  "tcol": "context"
+ },
+ "tech-api": {
+  "acol": "content",
+  "dataset": "bat-army/asynapi_and_openapi_specs_dataset",
+  "license": "apache-2.0",
+  "qcol": "file_name",
+  "sample": 30
+ },
+ "tech-backend": {
+  "acol": "completion",
+  "dataset": "devpkprajapati/llm-system-design-guide-basic",
+  "license": "mit",
+  "qcol": "question",
+  "sample": 40,
+  "tcol": "context"
+ },
+ "tech-cloud": {
+  "acol": "output",
+  "dataset": "djinnn/Solution_Architect_Skill",
+  "license": "mit",
+  "qcol": "instruction",
+  "sample": 40
+ },
+ "tech-compliance": {
+  "dataset": "AYI-NEDJIMI/iso27001-en",
+  "license": "Apache-2.0",
+  "parquet_url": "https://huggingface.co/datasets/AYI-NEDJIMI/iso27001-en/resolve/main/data/qa_dataset.parquet",
+  "sample": 60
+ },
+ "tech-cybersecurity": {
+  "acol": "assistant",
+  "dataset": "Trendyol/Trendyol-Cybersecurity-Instruction-Tuning-Dataset",
+  "license": "Apache-2.0",
+  "qcol": "user",
+  "sample": 40,
+  "tcol": "system"
+ },
+ "tech-database": {
+  "acol": "query",
+  "dataset": "omeryentur/text-to-postgresql",
+  "license": "mit",
+  "qcol": "question",
+  "sample": 40,
+  "tcol": "schema"
+ },
+ "tech-devops": {
+  "acol": "solution",
+  "dataset": "pavanmantha/devops-v1",
+  "license": "apache-2.0",
+  "qcol": "question",
+  "sample": 60
+ },
+ "tech-dns": {
+  "conversations": true,
+  "dataset": "youssefMakled/RTSP_FTP_SMTP_DNS_PROTOCOL_GRAMMAR_DATASET",
+  "filter": "dns",
+  "license": "undeclared-public",
+  "sample": 10
+ },
+ "tech-finops": {
+  "acol": "Rounded Cost ($)",
+  "dataset": "sairamn/gcp-cloud-billing-cost",
+  "license": "mit",
+  "qcol": "Service Name",
+  "sample": 40,
+  "tcol": "Region / Zone"
+ },
+ "tech-forensics": {
+  "dataset": "AYI-NEDJIMI/forensics-windows-en",
+  "license": "Apache-2.0",
+  "parquet_url": "https://huggingface.co/datasets/AYI-NEDJIMI/forensics-windows-en/resolve/main/data/qa.parquet",
+  "sample": 60
+ },
+ "tech-frontend": {
+  "acol": "answer",
+  "dataset": "Tensoic/FrontendCookbook",
+  "license": "apache-2.0",
+  "qcol": "question",
+  "sample": 40
+ },
+ "tech-iam": {
+  "dataset": "AYI-NEDJIMI/oauth-api-security-en",
+  "license": "Apache-2.0",
+  "sample": 40
+ },
+ "tech-incident": {
+  "acol": "resolution_steps",
+  "dataset": "Snaseem2026/devops-incident-response",
+  "license": "undeclared-public",
+  "qcol": "title",
+  "sample": 40,
+  "tcol": "root_cause"
+ },
+ "tech-it-helpdesk": {
+  "acol": "description",
+  "dataset": "Console-AI/IT-helpdesk-synthetic-tickets",
+  "license": "mit",
+  "qcol": "subject",
+  "sample": 40,
+  "tcol": "category"
+ },
+ "tech-kubernetes": {
+  "acol": "answer",
+  "dataset": "ItshMoh/kubernetes_qa_pairs",
+  "license": "undeclared-public",
+  "qcol": "question",
+  "sample": 60,
+  "tcol": "topic"
+ },
+ "tech-linux": {
+  "acol": "output",
+  "dataset": "mecha-org/linux-command-dataset",
+  "license": "apache-2.0",
+  "qcol": "input",
+  "sample": 40
+ },
+ "tech-malware": {
+  "acol": "completion",
+  "dataset": "mlfoundations-dev/stackexchange_reverseengineering",
+  "license": "CC-BY-SA-4.0",
+  "qcol": "instruction",
+  "sample": 40
+ },
+ "tech-monitoring": {
+  "acol": "output",
+  "dataset": "fatdogLeader/promQL-train",
+  "license": "mit",
+  "qcol": "instruction",
+  "sample": 60
+ },
+ "tech-network": {
+  "acol": "output",
+  "dataset": "BytArch/ub-networking-dataset-2024-2",
+  "license": "mit",
+  "qcol": "input",
+  "sample": 60
+ },
+ "tech-pentest": {
+  "dataset": "AYI-NEDJIMI/bug-bounty-pentest-en",
+  "license": "Apache-2.0",
+  "sample": 40
+ },
+ "tech-qa": {
+  "acol": "output",
+  "dataset": "cowWhySo/selenium-finetuning-dataset",
+  "license": "cc0-1.0",
+  "qcol": "text_input",
+  "sample": 40
+ },
+ "tech-release": {
+  "acol": "answer",
+  "dataset": "phanerozoic/Lean4-Changelog-QA",
+  "license": "apache-2.0",
+  "qcol": "question",
+  "sample": 40,
+  "tcol": "context"
+ },
+ "tech-secrets": {
+  "dataset": "AYI-NEDJIMI/post-quantum-crypto-en",
+  "license": "Apache-2.0",
+  "sample": 40
+ },
+ "tech-soc": {
+  "dataset": "AYI-NEDJIMI/soc-analyst-en",
+  "license": "Apache-2.0",
+  "sample": 40
+ },
+ "tech-sre": {
+  "acol": "expected_keywords",
+  "dataset": "MCP-1st-Birthday/smoltrace-site-reliability-engineering-tasks",
+  "license": "mit",
+  "qcol": "prompt",
+  "sample": 60
+ },
+ "tech-threatintel": {
+  "acol": "output",
+  "dataset": "reloading0101/threat-intelligence-dataset",
+  "license": "CC-BY-4.0",
+  "qcol": "instruction",
+  "sample": 40
+ }
+}
